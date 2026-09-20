@@ -117,12 +117,16 @@ every successful injection concentrated in a single content channel per build.
 
 ## What happens next
 
-[ROADMAP.md](ROADMAP.md) is a list of **conditions, not dates**. The blocker is that the
-benchmark instrument is not yet calibrated: every cell in `canary-v1` is a single sample,
-so a headline rate can move 20 points on one piece of text. Stage 1 fixes that by writing
-more cases and adding positive and negative controls. Until a deliberately susceptible
-config scores high and a hardened one scores near zero, no susceptibility number from this
-project should be cited — including internally.
+[ROADMAP.md](ROADMAP.md) lays out the destination, the five pieces it needs, and which of
+them exist. Two don't exist at all — a tool capability catalogue, and model susceptibility
+data — and they're the substance. The registry itself is thin; the reference data
+underneath it is the work.
+
+The immediate blocker is that the susceptibility measurement isn't calibrated: every cell
+in `canary-v1` is a single sample, so a headline rate moved 20 points on one piece of
+text. Until a deliberately susceptible config scores high and a hardened one scores near
+zero, **no susceptibility number from this project should be cited — including
+internally.**
 
 Compute is not the constraint. The first experiment used about five minutes of GPU time.
 

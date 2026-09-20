@@ -1,160 +1,137 @@
 # Roadmap
 
-**This is a list of conditions, not dates.** Each stage names what must be true before the
-next one starts. Nothing here is scheduled; work begins on a stage when its gate is met.
+Where this is, where it's going, and what it looks like finished.
 
-The project is deliberately low-traffic for now. The repo may be public, but it is not
-being promoted — the point is that the idea and this roadmap are sound and inspectable, so
-that when conditions are met the work can start rather than be designed.
+## The problem
 
-## Where things stand
+When an AI agent gets exploited, the flaw usually isn't in any one component. A token
+scoped too widely, a tool that reads public content, an approval prompt somebody clicked
+"always allow" on — each is defensible alone, and together they leak your private
+repositories. Because no single component is broken, there's no patched version to ship,
+so no CVE gets filed, so an operator has nothing to check against.
 
-| | |
-| --- | --- |
-| Premise tested | Yes — 21 findings written as advisories, [PHASE0-FINDINGS.md](PHASE0-FINDINGS.md) |
-| Registry format | v0.1, 20 advisories, matcher + specificity tests in CI |
-| Benchmark harness | Works end to end, [benchmark/RESULTS.md](benchmark/RESULTS.md) |
-| Benchmark **instrument** | **Not calibrated.** This is the blocker for everything downstream |
-| Contributors | One |
-| Machines | One RTX A4500 (~14 GB usable) |
+The unit of vulnerability is the **configuration**. Nothing records configurations, and
+nothing describes which ones are dangerous.
 
-Two datasets are known to be missing and are the real substance of the project: a
-tool→capability catalogue, and model susceptibility measurements. Both are reference data
-that advisories point at.
+## What this becomes
 
----
+An operator who wonders *"is the agent I'm running known to be exploitable?"* runs one
+command, offline, and gets an answer in under a minute. A researcher who publishes an
+agent exploit files a record that makes the finding checkable rather than just readable —
+the way a package vulnerability gets a CVE.
 
-## Stage 1 — Calibrate the suite
+That requires five pieces. Three exist in draft, two don't exist at all.
 
-**Why:** the first experiment produced a rate that moved 20 points depending on whether a
-single content channel flipped. Every cell in `canary-v1` is one channel × one technique ×
-**one sample**, so each cell is effectively a coin toss on one exact piece of text. The
-instrument is not yet known to measure anything.
-
-**Work:** authoring, not engineering. The harness does not change.
-
-- Multiple samples per cell — several differently-worded items per channel, so a cell's
-  score averages over phrasing rather than resting on one sentence.
-- More channels, roughly 4 → 20, so a result can be said to generalize past four framings.
-- Per-condition reporting: channel breakdown alongside any headline rate, never a bare
-  number.
-
-**Gate — all three must hold:**
-
-1. **Positive control fires.** A deliberately susceptible configuration scores high. If the
-   suite cannot catch a config built to be caught, it catches nothing.
-2. **Negative control stays clean.** A hardened configuration scores at or near zero.
-3. **Per-condition precision is usable.** Each channel's 95% Wilson interval is narrow
-   enough to distinguish it from its neighbours — as a starting target, width under ~20
-   points, which needs order-100 samples per channel rather than 6.
-
-Until all three hold, no susceptibility number from this project should be published or
-cited, including internally.
-
-**Cost:** ~1.3 h of compute for 400 pairs × 4 builds on the existing card. The expensive
-part is writing the content.
-
----
-
-## Stage 2 — One-command runs
-
-**Gate to start:** Stage 1 passed.
-
-Today a run needs llama.cpp installed by hand, a GGUF fetched by hand, and a manifest
-written by hand. That is fine for one person and impossible to hand to anyone else.
-
-**Work:** a single entry point that takes a HuggingFace id and a quantization, then
-fetches, hashes, runs, and writes a valid result. No hand-built manifests.
-
-**Gate to pass:** a person who has not seen the code can produce a schema-valid result
-from the README alone, without asking a question.
-
----
-
-## Stage 3 — Cross-machine variance baseline
-
-**Gate to start:** Stage 2 passed. Needs **2–3 machines of different hardware**, not
-powerful ones.
-
-**The question it answers:** how much do two *honest* runs of the same pinned artifact
-disagree across different hardware and runner builds? Temperature 0 and a fixed seed do
-not make llama.cpp deterministic across GPUs.
-
-This is the prerequisite for the verification model in
-[benchmark/SPEC.md](benchmark/SPEC.md). "Results are re-run, not trusted" is meaningless
-until it is known how far apart two good-faith runs normally sit — otherwise ordinary
-variance looks like fabrication and vice versa.
-
-**Gate to pass:** a published tolerance. A re-run within it corroborates; outside it, the
-result is flagged.
-
-**Machines available:** the A4500, a laptop, and possibly a rented cloud GPU. The laptop is
-sufficient — this stage needs *different*, not *fast*.
-
----
-
-## Stage 4 — Invited cohort
-
-**Gate to start:** Stages 1–3 passed, and the policy items below answered.
-
-A handful of people who are asked directly. Not a public call.
-
-**Why invited rather than open:** there is one chance to ask people to download several GB
-and spend an hour of GPU time. If the first dataset turns out to be noise, that goodwill is
-spent and the second ask is much harder.
-
-**Needs:** a submission path — PR template, CI validation of submitted results (the schema
-validation already in CI is the foundation), and deduplication on weights digest, scaffold
-digest and seed.
-
-**Gate to pass:** results arriving from people other than the maintainer, reproducing
-within the Stage 3 tolerance.
-
----
-
-## Stage 5 — Open contribution
-
-**Gate to start:** Stage 4 passed, plus both policy questions answered in writing:
-
-1. **Naming community models.** Publishing susceptibility scores for named community
-   fine-tunes means naming hobbyist authors. Needs a policy before any lineage comparison
-   is published.
-2. **Targeting risk.** A public ranking of the most easily compromised models is useful to
-   an attacker as well as a defender. The techniques are already published; the *scores*
-   are the new information. Needs a decision on what is published and at what granularity.
-
----
-
-## What each additional machine unlocks
-
-| Machine | Unlocks | Stage |
+| Piece | What it does | Status |
 | --- | --- | --- |
-| A4500 (have) | Everything up to 8B across quantizations; ~1.3 h per 400-pair × 4-build sweep | 1 |
-| Laptop | The variance baseline — needs *different* hardware, not fast | 3 |
-| Rented cloud GPU | The FP16 arm dropped from experiment 1 (needed >14 GB), and models above 13B | 1 extension |
+| **`agent.lock`** | A generated record of exactly what a deployment is made of: harness, version, tools, grants, approval settings, runtime. Pins exact values, holds no prompt text, safe to share. | Schema drafted. Nothing emits one yet — locks are written by hand. |
+| **Advisories** | Machine-matchable records of exploitable configurations, each a predicate over lockfiles, each with a permanent identifier. | Format v0.1. 20 records, all from cited public write-ups. |
+| **Capability catalogue** | Maps a tool to what it can *do* — read untrusted content, reach the network, execute code. | **Does not exist.** The largest open piece. |
+| **Susceptibility data** | Maps a pinned model artifact to how readily it obeys injected instructions. Aimed at quantized builds and community fine-tunes. | Harness works. Instrument not yet calibrated. |
+| **`agent-audit`** | Joins a lockfile to the registry, locally. Nothing leaves the machine. | Works. Three-valued, so an incomplete lock reads as *maybe*, never as safe. |
 
-Compute is not currently the constraint. The first experiment used about 5 minutes of GPU
-time. The constraint is that the measuring instrument is not yet marked.
+The two missing datasets are the substance. The registry itself is thin — a few hundred
+lines of schema and a matcher. What makes it useful is the reference data underneath, and
+that's where the work is.
 
----
+## Where we are
 
-## Registry track, in parallel
+Phase 0 asked one question: can real agent-security findings be written as predicates over
+a configuration? Twenty-one published findings were attempted. The answer was yes, more
+narrowly than hoped — 3 were configuration-native with no CVE possible, 6 gained real
+precision, 8 were ordinary component bugs a CVE already covers.
 
-Independent of the benchmark, and not gated on it:
+It also produced a correction. Two of the four axes originally proposed went unused: no
+finding depended on the model or the prompt. The prompt axis is genuinely dead for
+matching. The model axis read zero only because every finding concerned *hosted* products,
+which can't be pinned — open-weight builds have a SHA-256 and can be. That's what the
+susceptibility track exists to measure.
 
-1. **Capability catalogue.** Tool capabilities cannot be read from a manifest; they are a
-   judgement and need a maintained tool→capability mapping. The registry's configuration-
-   native advisories depend on it. Largest open piece of work.
-2. **Mirror rather than hand-write component advisories.** 8 of 21 phase-0 findings were
-   ordinary component bugs already covered by CVE/OSV. Source those automatically; spend
-   human review on configuration-native records.
-3. **Lockfile emitter.** Deferred until the capability catalogue exists, since a lock
-   without capabilities cannot match the advisories that matter.
+The first susceptibility experiment ran on 19 September: one model across four
+quantizations. It found no quantization effect, and more usefully found that the
+measurement itself isn't trustworthy yet — every successful injection concentrated in a
+single content channel per build, so the headline number moved 20 points on one piece of
+text.
 
-## Housekeeping before wider visibility
+**No susceptibility number from this project should be cited yet, including internally.**
 
-- Schema `$id` fields still read `ave-registry.example`; point them at the repo.
-- Enable GitHub private vulnerability reporting, which [DISCLOSURE.md](DISCLOSURE.md)
-  already directs people to.
-- Credit and notify @lizthedeveloper, whose idea this is and who asked to be told if
-  someone used it. Better sent with findings than with intentions.
+## Now
+
+**Calibrate the measurement.** Every cell in the current suite is one channel × one
+technique × one sample, so each result rests on a single sentence. The fix is authoring,
+not engineering: several worded variants per channel so a score averages over phrasing,
+and roughly five times more channels so a result can be said to generalize.
+
+Then the part that actually decides whether any of it means anything — build a
+configuration that *should* be compromised and one that *shouldn't*, and confirm the suite
+separates them. An instrument that can't catch a config built to be caught isn't
+measuring.
+
+## Next
+
+**Make a run reproducible by someone else.** Today it needs llama.cpp installed by hand, a
+model fetched by hand, and a manifest written by hand. It needs to be one command taking a
+model id, which fetches, hashes, runs, and emits a valid result.
+
+**Establish how much honest runs disagree.** Temperature 0 and a fixed seed don't make
+inference identical across different GPUs. Until the normal spread between two good-faith
+runs is known, a re-run can't confirm or refute anything — ordinary variance looks like
+fabrication and vice versa. This needs two or three *different* machines, not fast ones.
+
+**Start the capability catalogue.** Independent of all the above and not blocked by it.
+Tool capabilities can't be read from a manifest; they're a judgement that has to be
+recorded per tool. The configuration-native advisories — the ones that justify the whole
+project — depend on it.
+
+## Later
+
+**Mirror rather than hand-write component advisories.** Eight of twenty-one phase-0
+findings were ordinary package bugs. Source those from CVE/OSV automatically and spend
+human review on configurations, which nothing else covers.
+
+**A lockfile emitter**, once the capability catalogue exists — a lock without capabilities
+can't match the advisories that matter. The realistic path is a wrapper that observes a
+run without the harness cooperating, since harness maintainers have no reason to adopt
+this until the registry has value.
+
+**Native emission.** The end state is a harness writing `agent.lock` itself, so operators
+get the record without opting in.
+
+## How we'll know each piece works
+
+Conditions, not dates. Work on a piece starts when the one before it is satisfied.
+
+| Piece | Done when |
+| --- | --- |
+| Suite calibration | A deliberately susceptible config scores high, a hardened one scores near zero, and each channel's interval is tight enough to tell channels apart. *(The precision threshold hasn't been derived yet — it needs the control runs to set it.)* |
+| One-command runs | Someone who hasn't seen the code produces a valid result from the README alone. |
+| Variance baseline | A published tolerance: within it a re-run corroborates, outside it the result is flagged. |
+| Contribution | Records arriving from people other than the maintainer, reproducing within that tolerance. |
+| Registry maturity | Someone other than the maintainer is merging advisories. |
+
+The last one is the real measure. The rest can be produced by sustained individual effort;
+only that one means the project exists independently of whoever started it.
+
+## What would make this fail
+
+**Breadth without calibration.** Running an uncalibrated suite across a thousand machines
+produces a thousand precise measurements of nothing. Compute has never been the
+constraint — the first experiment used about five minutes of GPU time.
+
+**Advisories that match everything.** A record matching most deployments is worse than no
+record, because it teaches people to ignore the output. Volume is the easiest metric to
+move and the one most likely to destroy the tool's value. If the review bar is ever
+relaxed to grow the corpus, the project starts failing while its numbers improve.
+
+**Being wrong about the premise.** If real findings keep collapsing to "this package at
+this version is broken," the right conclusion is that OSV should gain a few fields, and
+that's a smaller and more likely-to-succeed contribution than a new registry. Phase 0 says
+otherwise, but on 21 findings written by one person.
+
+## Where the idea came from
+
+[@lizthedeveloper](https://www.instagram.com/reel/Dde4lvCCBl4/) proposed it in a
+66-second reel on 19 September 2026 — a CVE for agent configurations, with a lockfile
+rather than a manifest so you know the exact thing you ran — and gave it away to anyone in
+AI safety who would build it. The idea is hers. The schema, the corpus, and the mistakes
+are this project's.
