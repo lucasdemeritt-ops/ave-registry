@@ -4,7 +4,7 @@
   "published": "2026-09-19T00:00:00Z",
   "modified": "2026-09-19T00:00:00Z",
   "summary": "Semantic Kernel (Python) In-Memory Vector Store filter evaluates injected code",
-  "details": "Semantic Kernel for Python before 1.39.4 evaluates vector-store filter expressions with eval() behind a bypassable blocklist. An agent using the In-Memory Vector Store through the search plugin, and reachable by prompt injection, can be driven to execute code on the host. Deployments that do not use the In-Memory Vector Store are not affected.",
+  "details": "Semantic Kernel for Python before 1.39.4 evaluates vector-store filter expressions with eval() behind a bypassable blocklist. An agent using the In-Memory Vector Store through the search plugin, and reachable by prompt injection, can be driven to execute code on the host. Deployments that do not use the In-Memory Vector Store are not affected.\n\nNOTE: this OSV record over-matches. The source advisory is affected only under conditions OSV cannot express (see affected[].database_specific); a plain version match here flags deployments that are not actually affected.",
   "affected": [
     {
       "package": {
@@ -42,6 +42,11 @@
       "url": "https://www.microsoft.com/en-us/security/blog/2026/05/07/prompts-become-shells-rce-vulnerabilities-ai-agent-frameworks/"
     }
   ],
+  "database_specific": {
+    "generated_from": "AVE-2026-0007",
+    "generator": "AVE registry tools/osv_export.py",
+    "why": "AVE mirrors component-level records into OSV form so existing OSV scanners can use them without knowing AVE exists. Records OSV cannot express faithfully are marked. See ALTERNATIVES.md."
+  },
   "aliases": [
     "CVE-2026-26030"
   ],

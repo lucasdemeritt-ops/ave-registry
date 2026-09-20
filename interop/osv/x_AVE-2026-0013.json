@@ -32,6 +32,11 @@
       "url": "https://research.checkpoint.com/2026/rce-and-api-token-exfiltration-through-claude-code-project-files-cve-2025-59536/"
     }
   ],
+  "database_specific": {
+    "generated_from": "AVE-2026-0013",
+    "generator": "AVE registry tools/osv_export.py",
+    "why": "AVE mirrors component-level records into OSV form so existing OSV scanners can use them without knowing AVE exists. Records OSV cannot express faithfully are marked. See ALTERNATIVES.md."
+  },
   "aliases": [
     "CVE-2026-21852"
   ],

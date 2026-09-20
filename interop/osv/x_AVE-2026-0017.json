@@ -26,6 +26,11 @@
       "url": "https://github.com/aws/aws-toolkit-vscode/security/advisories/GHSA-7g7f-ff96-5gcw"
     }
   ],
+  "database_specific": {
+    "generated_from": "AVE-2026-0017",
+    "generator": "AVE registry tools/osv_export.py",
+    "why": "AVE mirrors component-level records into OSV form so existing OSV scanners can use them without knowing AVE exists. Records OSV cannot express faithfully are marked. See ALTERNATIVES.md."
+  },
   "aliases": [
     "AWS-2025-015",
     "GHSA-7g7f-ff96-5gcw"

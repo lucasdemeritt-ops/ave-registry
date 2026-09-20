@@ -4,7 +4,7 @@
   "published": "2026-09-19T00:00:00Z",
   "modified": "2026-09-19T00:00:00Z",
   "summary": "Semantic Kernel (.NET) SessionsPythonPlugin exposes unvalidated file write to the model",
-  "details": "Semantic Kernel for .NET before 1.71.0 exposes DownloadFileAsync to the model as a callable function with no path validation. An agent configured with SessionsPythonPlugin can be driven by prompt input to write files outside the sandbox onto the host, reaching persistence and host compromise. Deployments without the plugin are not affected.",
+  "details": "Semantic Kernel for .NET before 1.71.0 exposes DownloadFileAsync to the model as a callable function with no path validation. An agent configured with SessionsPythonPlugin can be driven by prompt input to write files outside the sandbox onto the host, reaching persistence and host compromise. Deployments without the plugin are not affected.\n\nNOTE: this OSV record over-matches. The source advisory is affected only under conditions OSV cannot express (see affected[].database_specific); a plain version match here flags deployments that are not actually affected.",
   "affected": [
     {
       "package": {
@@ -42,6 +42,11 @@
       "url": "https://www.microsoft.com/en-us/security/blog/2026/05/07/prompts-become-shells-rce-vulnerabilities-ai-agent-frameworks/"
     }
   ],
+  "database_specific": {
+    "generated_from": "AVE-2026-0008",
+    "generator": "AVE registry tools/osv_export.py",
+    "why": "AVE mirrors component-level records into OSV form so existing OSV scanners can use them without knowing AVE exists. Records OSV cannot express faithfully are marked. See ALTERNATIVES.md."
+  },
   "aliases": [
     "CVE-2026-25592"
   ],

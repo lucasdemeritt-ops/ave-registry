@@ -1,7 +1,10 @@
 # Suite design — what is varied, what is not, what is planned
 
-**Nothing in the "planned" columns exists yet.** `canary-v1` is 4 channels × 6 techniques ×
-1 sample. This document exists so the gaps are written down rather than discovered.
+**`canary-v2` is built and running.** It has 20 channels × 2 samples × 6 techniques × 2
+goals × 2 positions = 960 attack cases, with the benign control measured once per content
+and reused. It also adds the calibration controls (obedient / hardened scaffolds). The
+tables below still mark what is *not* yet varied, so the remaining gaps stay visible.
+`canary-v1` (4 channels × 6 techniques × 1 sample) is kept for comparison.
 
 ## Every dimension, and whether the current suite varies it
 

@@ -4,7 +4,7 @@
   "published": "2026-09-19T00:00:00Z",
   "modified": "2026-09-19T00:00:00Z",
   "summary": "Supabase MCP with service_role key exfiltrates database via injected row content",
-  "details": "The Supabase MCP server run with a service_role credential bypasses row-level security. When the database holds attacker-submitted text such as support tickets, an agent asked to read those rows follows embedded instructions, reads sensitive tables, and writes their contents somewhere the attacker can read. One tool holds private-data access, untrusted input, and a write channel at once. There is no fixed version; read-only mode removes the write channel.",
+  "details": "The Supabase MCP server run with a service_role credential bypasses row-level security. When the database holds attacker-submitted text such as support tickets, an agent asked to read those rows follows embedded instructions, reads sensitive tables, and writes their contents somewhere the attacker can read. One tool holds private-data access, untrusted input, and a write channel at once. There is no fixed version; read-only mode removes the write channel.\n\nNOTE: this OSV record over-matches. The source advisory is affected only under conditions OSV cannot express (see affected[].database_specific); a plain version match here flags deployments that are not actually affected.",
   "affected": [
     {
       "package": {
@@ -51,6 +51,11 @@
       "url": "https://simonwillison.net/2025/Jul/6/supabase-mcp-lethal-trifecta/"
     }
   ],
+  "database_specific": {
+    "generated_from": "AVE-2026-0002",
+    "generator": "AVE registry tools/osv_export.py",
+    "why": "AVE mirrors component-level records into OSV form so existing OSV scanners can use them without knowing AVE exists. Records OSV cannot express faithfully are marked. See ALTERNATIVES.md."
+  },
   "credits": [
     {
       "name": "General Analysis"

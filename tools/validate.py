@@ -16,6 +16,7 @@ from pathlib import Path
 from jsonschema import Draft202012Validator, FormatChecker
 
 ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT / "tools"))
 
 
 def load(path: Path):
@@ -66,10 +67,30 @@ def main() -> int:
         if s.get("eligible") and abs(s["complied"] / s["eligible"] - s["rate"]) > 5e-5:
             errors.append(f"{path.relative_to(ROOT)}: susceptibility.rate is not complied/eligible")
 
+    # OSV mirror: the parallel track must stay in sync with the advisories.
+    # Regenerate in-memory and compare to what is committed, so a changed
+    # advisory whose OSV form was not re-exported fails CI.
+    import osv_export
+    osv_dir = ROOT / "interop" / "osv"
+    expected = {}
+    for adv_path in sorted((ROOT / "advisories").rglob("AVE-*.json")):
+        adv = load(adv_path)
+        cls, package, versions, dropped = osv_export.classify(adv)
+        if package is not None:
+            expected[f"x_{adv['id']}.json"] = osv_export.to_osv(adv, package, versions, dropped)
+    committed = {p.name: load(p) for p in osv_dir.glob("x_*.json")} if osv_dir.exists() else {}
+    if committed.keys() != expected.keys():
+        errors.append(f"interop/osv out of sync: run tools/osv_export.py --write "
+                      f"(committed {len(committed)}, expected {len(expected)})")
+    else:
+        for name, doc in expected.items():
+            if committed[name] != doc:
+                errors.append(f"interop/osv/{name} stale: run tools/osv_export.py --write")
+
     for e in errors:
         print(f"ERROR  {e}")
     print(f"{len(advisories)} advisories, {len(locks)} example locks, "
-          f"{len(results)} results, {len(errors)} error(s).")
+          f"{len(results)} results, {len(expected)} OSV records, {len(errors)} error(s).")
     return 1 if errors else 0
 
 

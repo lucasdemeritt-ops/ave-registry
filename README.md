@@ -33,6 +33,11 @@ cursor-dev-workstation: 4 match(es)
 hardened-support-agent: clear
 ```
 
+## New here?
+
+[EXPLAINER.md](EXPLAINER.md) describes the whole idea in plain language, no security
+background needed. Start there if the rest of this reads as jargon.
+
 ## Where the idea came from
 
 [@lizthedeveloper](https://www.instagram.com/reel/Dde4lvCCBl4/) proposed it in a

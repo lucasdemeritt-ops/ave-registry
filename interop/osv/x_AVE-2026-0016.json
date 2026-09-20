@@ -37,6 +37,11 @@
       "url": "https://thehackernews.com/2025/09/first-malicious-mcp-server-found.html"
     }
   ],
+  "database_specific": {
+    "generated_from": "AVE-2026-0016",
+    "generator": "AVE registry tools/osv_export.py",
+    "why": "AVE mirrors component-level records into OSV form so existing OSV scanners can use them without knowing AVE exists. Records OSV cannot express faithfully are marked. See ALTERNATIVES.md."
+  },
   "credits": [
     {
       "name": "Koi Security"

@@ -4,7 +4,7 @@
   "published": "2026-09-19T00:00:00Z",
   "modified": "2026-09-19T00:00:00Z",
   "summary": "Langflow before 1.3.0 executes unauthenticated code via its validation endpoint",
-  "details": "Langflow before 1.3.0 exposes a code-validation endpoint that executes submitted Python without authentication. Any instance reachable by an attacker is fully compromised. An instance bound to the local machine only is not remotely reachable.",
+  "details": "Langflow before 1.3.0 exposes a code-validation endpoint that executes submitted Python without authentication. Any instance reachable by an attacker is fully compromised. An instance bound to the local machine only is not remotely reachable.\n\nNOTE: this OSV record over-matches. The source advisory is affected only under conditions OSV cannot express (see affected[].database_specific); a plain version match here flags deployments that are not actually affected.",
   "affected": [
     {
       "package": {
@@ -44,6 +44,11 @@
       "url": "https://horizon3.ai/attack-research/disclosures/unsafe-at-any-speed-abusing-python-exec-for-unauth-rce-in-langflow-ai/"
     }
   ],
+  "database_specific": {
+    "generated_from": "AVE-2026-0009",
+    "generator": "AVE registry tools/osv_export.py",
+    "why": "AVE mirrors component-level records into OSV form so existing OSV scanners can use them without knowing AVE exists. Records OSV cannot express faithfully are marked. See ALTERNATIVES.md."
+  },
   "aliases": [
     "CVE-2025-3248"
   ],

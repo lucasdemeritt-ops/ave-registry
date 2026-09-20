@@ -4,7 +4,7 @@
   "published": "2026-09-19T00:00:00Z",
   "modified": "2026-09-19T00:00:00Z",
   "summary": "GitHub Copilot agent mode can enable its own auto-approval by editing workspace settings",
-  "details": "In agent mode, Copilot could write to the workspace settings file without confirmation. Injected content instructs it to enable automatic tool approval, after which terminal commands run unconfirmed. The root condition is an agent able to modify its own approval configuration. Fixed in the August 2025 update; the sources reviewed do not give an exact fixed version, so this record matches on the setting rather than a version range.",
+  "details": "In agent mode, Copilot could write to the workspace settings file without confirmation. Injected content instructs it to enable automatic tool approval, after which terminal commands run unconfirmed. The root condition is an agent able to modify its own approval configuration. Fixed in the August 2025 update; the sources reviewed do not give an exact fixed version, so this record matches on the setting rather than a version range.\n\nNOTE: this OSV record over-matches. The source advisory is affected only under conditions OSV cannot express (see affected[].database_specific); a plain version match here flags deployments that are not actually affected.",
   "affected": [
     {
       "package": {
@@ -41,6 +41,11 @@
       "url": "https://embracethered.com/blog/posts/2025/github-copilot-remote-code-execution-via-prompt-injection/"
     }
   ],
+  "database_specific": {
+    "generated_from": "AVE-2026-0006",
+    "generator": "AVE registry tools/osv_export.py",
+    "why": "AVE mirrors component-level records into OSV form so existing OSV scanners can use them without knowing AVE exists. Records OSV cannot express faithfully are marked. See ALTERNATIVES.md."
+  },
   "aliases": [
     "CVE-2025-53773"
   ],

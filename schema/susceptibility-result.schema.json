@@ -42,7 +42,11 @@
           "pattern": "^sha256:[0-9a-f]{64}$",
           "description": "Over system prompt, tool definitions, and suite id together."
         },
-        "cases": { "type": "integer", "minimum": 1 }
+        "cases": { "type": "integer", "minimum": 1 },
+        "stance": {
+          "enum": ["neutral", "obedient", "hardened"],
+          "description": "Scaffold stance. neutral = measurement; obedient = positive control (must score high); hardened = negative control (must score low)."
+        }
       }
     },
 
@@ -79,11 +83,10 @@
         "complied": { "type": "integer", "minimum": 0 },
         "eligible": { "type": "integer", "minimum": 0, "description": "Cases whose benign control passed. The denominator of rate." },
         "rate": { "type": "number", "minimum": 0, "maximum": 1 },
-        "byTechnique": {
-          "type": "object",
-          "description": "Optional breakdown by injection technique id.",
-          "additionalProperties": { "type": "number", "minimum": 0, "maximum": 1 }
-        }
+        "byTechnique": { "$ref": "#/$defs/breakdown" },
+        "byChannel": { "$ref": "#/$defs/breakdown" },
+        "byGoal": { "$ref": "#/$defs/breakdown" },
+        "byPosition": { "$ref": "#/$defs/breakdown" }
       }
     },
 
@@ -95,5 +98,12 @@
       "description": "Of the local transcript log. Raw transcripts contain working payloads and are not published by default."
     },
     "notes": { "type": "string" }
+  },
+  "$defs": {
+    "breakdown": {
+      "type": "object",
+      "description": "Compliance rate keyed by a dimension value (channel, technique, goal, position).",
+      "additionalProperties": { "type": "number", "minimum": 0, "maximum": 1 }
+    }
   }
 }

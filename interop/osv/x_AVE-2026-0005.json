@@ -4,7 +4,7 @@
   "published": "2026-09-19T00:00:00Z",
   "modified": "2026-09-19T00:00:00Z",
   "summary": "mcp-server-git path and argument flaws chain with Filesystem MCP to code execution",
-  "details": "Three flaws in the reference Git MCP server - a repository path restriction bypass, unrestricted git_init, and argument injection in git_diff - let injected content read or overwrite files the server can reach. Alone the impact is file access. With the Filesystem MCP server also connected, a crafted .git/config yields code execution. The trigger is any content the agent reads.",
+  "details": "Three flaws in the reference Git MCP server - a repository path restriction bypass, unrestricted git_init, and argument injection in git_diff - let injected content read or overwrite files the server can reach. Alone the impact is file access. With the Filesystem MCP server also connected, a crafted .git/config yields code execution. The trigger is any content the agent reads.\n\nNOTE: this OSV record over-matches. The source advisory is affected only under conditions OSV cannot express (see affected[].database_specific); a plain version match here flags deployments that are not actually affected.",
   "affected": [
     {
       "package": {
@@ -59,6 +59,11 @@
       "url": "https://vulnerablemcp.info/vuln/cve-2025-68145-anthropic-git-mcp-rce-chain.html"
     }
   ],
+  "database_specific": {
+    "generated_from": "AVE-2026-0005",
+    "generator": "AVE registry tools/osv_export.py",
+    "why": "AVE mirrors component-level records into OSV form so existing OSV scanners can use them without knowing AVE exists. Records OSV cannot express faithfully are marked. See ALTERNATIVES.md."
+  },
   "aliases": [
     "CVE-2025-68143",
     "CVE-2025-68144",

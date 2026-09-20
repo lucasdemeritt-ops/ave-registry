@@ -143,9 +143,19 @@ def to_osv(advisory, package, versions, dropped):
         "published": advisory["published"] + "T00:00:00Z",
         "modified": advisory.get("modified", advisory["published"]) + "T00:00:00Z",
         "summary": advisory["title"],
-        "details": advisory["summary"],
+        "details": advisory["summary"] + ("" if not dropped else
+            "\n\nNOTE: this OSV record over-matches. The source advisory is affected only "
+            "under conditions OSV cannot express (see affected[].database_specific); a plain "
+            "version match here flags deployments that are not actually affected."),
         "affected": [affected],
         "references": [{"type": "ARTICLE", "url": u} for u in advisory["references"]],
+        "database_specific": {
+            "generated_from": advisory["id"],
+            "generator": "AVE registry tools/osv_export.py",
+            "why": ("AVE mirrors component-level records into OSV form so existing OSV "
+                    "scanners can use them without knowing AVE exists. Records OSV cannot "
+                    "express faithfully are marked. See ALTERNATIVES.md."),
+        },
     }
     if advisory.get("aliases"):
         record["aliases"] = advisory["aliases"]
@@ -173,8 +183,9 @@ def main() -> int:
         print(f"{adv['id']}  {cls:<16} {note}")
         if args.write and package:
             out.mkdir(parents=True, exist_ok=True)
-            (out / f"{adv['id']}.json").write_text(
-                json.dumps(to_osv(adv, package, versions, dropped), indent=2) + "\n", encoding="utf-8")
+            record = to_osv(adv, package, versions, dropped)
+            (out / f"{record['id']}.json").write_text(
+                json.dumps(record, indent=2) + "\n", encoding="utf-8")
 
     total = sum(len(v) for v in tally.values())
     print()
