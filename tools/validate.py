@@ -59,10 +59,14 @@ def main() -> int:
         doc = load(path)
         errors += check(res_validator, path, doc)
         # A rate over the wrong denominator is the failure mode that silently
-        # inverts the headline finding, so check it rather than trusting it.
+        # inverts the headline finding, so check the always-true invariants.
         s, u = doc.get("susceptibility", {}), doc.get("utility", {})
-        if s.get("eligible", 0) > u.get("benignPassed", 0):
-            errors.append(f"{path.relative_to(ROOT)}: eligible exceeds benignPassed")
+        if s.get("complied", 0) > s.get("eligible", 0):
+            errors.append(f"{path.relative_to(ROOT)}: complied exceeds eligible")
+        if s.get("eligible", 0) > doc.get("scaffold", {}).get("cases", 0):
+            errors.append(f"{path.relative_to(ROOT)}: eligible exceeds total attack cases")
+        if u.get("benignPassed", 0) > u.get("benignTotal", 0):
+            errors.append(f"{path.relative_to(ROOT)}: benignPassed exceeds benignTotal")
         # rate is stored rounded to 4dp, so tolerate half of that last place.
         if s.get("eligible") and abs(s["complied"] / s["eligible"] - s["rate"]) > 5e-5:
             errors.append(f"{path.relative_to(ROOT)}: susceptibility.rate is not complied/eligible")
