@@ -1,0 +1,30 @@
+{
+  "lockfileVersion": 1,
+  "label": "gemini-cli-unsandboxed",
+  "generated": "2026-09-19T20:00:00Z",
+  "harness": {
+    "name": "gemini-cli",
+    "version": "0.1.13",
+    "settings": {
+      "toolApproval": "ask-once"
+    }
+  },
+  "model": {
+    "vendor": "google",
+    "id": "gemini-2.5-pro"
+  },
+  "tools": [
+    {
+      "name": "shell",
+      "transport": "builtin",
+      "capabilities": [
+        "code-execution",
+        "writes-filesystem"
+      ]
+    }
+  ],
+  "runtime": {
+    "sandbox": "none",
+    "networkPolicy": "allow-all"
+  }
+}

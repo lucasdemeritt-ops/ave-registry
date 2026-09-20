@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "0.1",
+  "id": "AVE-2026-0012",
+  "aliases": [
+    "CVE-2025-59536"
+  ],
+  "published": "2026-09-19",
+  "title": "Claude Code before 1.0.111 runs hooks from an untrusted project on startup",
+  "summary": "Claude Code before 1.0.111 executed hook commands defined in a project's settings file when started in that directory. Opening an attacker-supplied repository was sufficient for command execution.",
+  "affected": {
+    "all": [
+      {
+        "harness": {
+          "name": "claude-code",
+          "versions": [
+            "<1.0.111"
+          ]
+        }
+      }
+    ]
+  },
+  "severity": "high",
+  "impact": [
+    "code-execution"
+  ],
+  "attackVector": "malicious-project-config",
+  "fixedBy": [
+    {
+      "upgrade": {
+        "component": "harness",
+        "name": "claude-code",
+        "version": "1.0.111"
+      }
+    }
+  ],
+  "references": [
+    "https://research.checkpoint.com/2026/rce-and-api-token-exfiltration-through-claude-code-project-files-cve-2025-59536/"
+  ],
+  "credit": [
+    "Check Point Research"
+  ]
+}

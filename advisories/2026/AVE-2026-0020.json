@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "0.1",
+  "id": "AVE-2026-0020",
+  "published": "2026-09-19",
+  "title": "ChatGPT Deep Research leaks connector data server-side via injected email (ShadowLeak)",
+  "summary": "With a mail connector and browsing both enabled, an email carrying hidden instructions caused the Deep Research agent to send mailbox contents to an attacker-chosen URL. The request originated from the vendor's infrastructure, so it was invisible to the operator's own network controls. The researchers note any data connector gives the same shape. OpenAI fixed the service in August 2025.",
+  "affected": {
+    "all": [
+      {
+        "harness": {
+          "name": "chatgpt-deep-research",
+          "hosted": true
+        }
+      },
+      {
+        "toolset": {
+          "capabilities": {
+            "includesAll": [
+              "ingests-untrusted-content",
+              "reads-private-data",
+              "external-egress"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "severity": "high",
+  "impact": [
+    "exfiltration"
+  ],
+  "attackVector": "indirect-prompt-injection",
+  "fixedBy": [
+    {
+      "remediatedServerSide": "2025-08"
+    }
+  ],
+  "references": [
+    "https://therecord.media/openai-fixes-zero-click-shadowleak-vulnerability",
+    "https://thehackernews.com/2025/09/shadowleak-zero-click-flaw-leaks-gmail.html"
+  ],
+  "credit": [
+    "Radware"
+  ]
+}

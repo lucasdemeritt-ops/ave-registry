@@ -1,0 +1,66 @@
+{
+  "lockfileVersion": 1,
+  "label": "cursor-dev-workstation",
+  "generated": "2026-09-19T20:00:00Z",
+  "harness": {
+    "name": "cursor",
+    "version": "1.2.4",
+    "settings": {
+      "toolApproval": "auto",
+      "configWriteApproval": "auto",
+      "toolDefinitionPinning": false,
+      "projectConfigTrust": "auto"
+    }
+  },
+  "model": {
+    "vendor": "anthropic",
+    "id": "claude-sonnet-4"
+  },
+  "tools": [
+    {
+      "name": "slack",
+      "source": "pkg:npm/@modelcontextprotocol/server-slack",
+      "version": "2025.4.25",
+      "transport": "mcp-stdio",
+      "pinned": false,
+      "capabilities": [
+        "ingests-untrusted-content",
+        "reads-private-data",
+        "external-egress"
+      ]
+    },
+    {
+      "name": "supabase",
+      "source": "pkg:npm/@supabase/mcp-server-supabase",
+      "version": "0.4.5",
+      "transport": "mcp-stdio",
+      "pinned": false,
+      "capabilities": [
+        "ingests-untrusted-content",
+        "reads-private-data",
+        "external-egress"
+      ],
+      "grants": {
+        "credential": "service_role",
+        "readOnly": false
+      }
+    },
+    {
+      "name": "terminal",
+      "transport": "builtin",
+      "capabilities": [
+        "code-execution",
+        "writes-filesystem"
+      ]
+    }
+  ],
+  "runtime": {
+    "sandbox": "none",
+    "networkPolicy": "allow-all",
+    "exposure": "local",
+    "secretsReachable": [
+      "SUPABASE_SERVICE_ROLE_KEY",
+      "SLACK_BOT_TOKEN"
+    ]
+  }
+}

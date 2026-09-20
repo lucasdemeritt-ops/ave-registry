@@ -1,0 +1,57 @@
+{
+  "schemaVersion": "0.1",
+  "id": "AVE-2026-0002",
+  "published": "2026-09-19",
+  "title": "Supabase MCP with service_role key exfiltrates database via injected row content",
+  "summary": "The Supabase MCP server run with a service_role credential bypasses row-level security. When the database holds attacker-submitted text such as support tickets, an agent asked to read those rows follows embedded instructions, reads sensitive tables, and writes their contents somewhere the attacker can read. One tool holds private-data access, untrusted input, and a write channel at once. There is no fixed version; read-only mode removes the write channel.",
+  "affected": {
+    "all": [
+      {
+        "tool": {
+          "source": "pkg:npm/@supabase/mcp-server-supabase",
+          "grants": {
+            "credential": "service_role",
+            "readOnly": false
+          }
+        }
+      },
+      {
+        "toolset": {
+          "capabilities": {
+            "includesAny": [
+              "ingests-untrusted-content"
+            ]
+          }
+        }
+      },
+      {
+        "model": {
+          "any": true
+        }
+      }
+    ]
+  },
+  "severity": "high",
+  "impact": [
+    "exfiltration"
+  ],
+  "attackVector": "indirect-prompt-injection",
+  "fixedBy": [
+    {
+      "mitigation": "Run the server in read-only mode",
+      "set": {
+        "tools.supabase.grants.readOnly": true
+      }
+    },
+    {
+      "mitigation": "Do not give an agent a service_role credential; use a role subject to row-level security"
+    }
+  ],
+  "references": [
+    "https://simonwillison.net/2025/Jul/6/supabase-mcp-lethal-trifecta/"
+  ],
+  "credit": [
+    "General Analysis",
+    "Simon Willison (analysis)"
+  ]
+}

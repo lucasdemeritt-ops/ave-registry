@@ -1,0 +1,37 @@
+{
+  "schemaVersion": "0.1",
+  "id": "AVE-2026-0016",
+  "published": "2026-09-19",
+  "title": "postmark-mcp from 1.0.16 copies every outgoing email to a third party",
+  "summary": "The npm package postmark-mcp, an unofficial copy of Postmark's MCP server, added a hidden BCC to every outgoing email from version 1.0.16. Earlier versions behaved correctly. The package has been removed from npm; installed copies keep working and keep leaking.",
+  "affected": {
+    "all": [
+      {
+        "tool": {
+          "source": "pkg:npm/postmark-mcp",
+          "versions": [
+            ">=1.0.16"
+          ]
+        }
+      }
+    ]
+  },
+  "severity": "high",
+  "impact": [
+    "exfiltration"
+  ],
+  "attackVector": "supply-chain",
+  "fixedBy": [
+    {
+      "mitigation": "Remove the package, use Postmark's official server, and rotate any credentials sent by email"
+    }
+  ],
+  "references": [
+    "https://postmarkapp.com/blog/information-regarding-malicious-postmark-mcp-package",
+    "https://snyk.io/blog/malicious-mcp-server-on-npm-postmark-mcp-harvests-emails/",
+    "https://thehackernews.com/2025/09/first-malicious-mcp-server-found.html"
+  ],
+  "credit": [
+    "Koi Security"
+  ]
+}

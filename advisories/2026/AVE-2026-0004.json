@@ -1,0 +1,55 @@
+{
+  "schemaVersion": "0.1",
+  "id": "AVE-2026-0004",
+  "aliases": [
+    "CVE-2025-54135"
+  ],
+  "published": "2026-09-19",
+  "title": "Cursor before 1.3 rewrites its MCP configuration from injected content (CurXecute)",
+  "summary": "Cursor before 1.3 applies agent-authored changes to its MCP configuration without approval and starts the new server immediately. Any connected tool that returns attacker-influenced content, such as a Slack server reading a public channel, is enough to reach command execution on the developer's machine. A Cursor install with no such tool connected is not reachable this way.",
+  "affected": {
+    "all": [
+      {
+        "harness": {
+          "name": "cursor",
+          "versions": [
+            "<1.3"
+          ]
+        }
+      },
+      {
+        "toolset": {
+          "capabilities": {
+            "includesAny": [
+              "ingests-untrusted-content"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "severity": "high",
+  "impact": [
+    "code-execution"
+  ],
+  "attackVector": "indirect-prompt-injection",
+  "fixedBy": [
+    {
+      "upgrade": {
+        "component": "harness",
+        "name": "cursor",
+        "version": "1.3"
+      }
+    }
+  ],
+  "detection": [
+    "ATR-2026-02022"
+  ],
+  "references": [
+    "https://www.tenable.com/blog/faq-cve-2025-54135-cve-2025-54136-vulnerabilities-in-cursor-curxecute-mcpoison",
+    "https://thehackernews.com/2025/08/cursor-ai-code-editor-fixed-flaw.html"
+  ],
+  "credit": [
+    "Aim Labs"
+  ]
+}

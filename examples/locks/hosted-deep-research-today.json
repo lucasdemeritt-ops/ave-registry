@@ -1,0 +1,27 @@
+{
+  "lockfileVersion": 1,
+  "label": "hosted-deep-research-today",
+  "generated": "2026-09-19T20:00:00Z",
+  "harness": {
+    "name": "chatgpt-deep-research",
+    "hosted": true
+  },
+  "tools": [
+    {
+      "name": "gmail",
+      "transport": "connector",
+      "capabilities": [
+        "ingests-untrusted-content",
+        "reads-private-data"
+      ]
+    },
+    {
+      "name": "browser",
+      "transport": "builtin",
+      "capabilities": [
+        "ingests-untrusted-content",
+        "external-egress"
+      ]
+    }
+  ]
+}

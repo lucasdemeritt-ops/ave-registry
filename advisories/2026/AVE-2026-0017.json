@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "0.1",
+  "id": "AVE-2026-0017",
+  "aliases": [
+    "AWS-2025-015",
+    "GHSA-7g7f-ff96-5gcw"
+  ],
+  "published": "2026-09-19",
+  "title": "Amazon Q Developer for VS Code 1.84.0 shipped with an injected destructive prompt",
+  "summary": "Version 1.84.0 of the extension was built from a repository into which an attacker had committed a prompt instructing the agent to delete local files and cloud resources. AWS reports a syntax error prevented execution. The version was withdrawn.",
+  "affected": {
+    "all": [
+      {
+        "harness": {
+          "name": "amazon-q-vscode",
+          "versions": [
+            "=1.84.0"
+          ]
+        }
+      }
+    ]
+  },
+  "severity": "medium",
+  "impact": [
+    "destruction"
+  ],
+  "attackVector": "supply-chain",
+  "fixedBy": [
+    {
+      "upgrade": {
+        "component": "harness",
+        "name": "amazon-q-vscode",
+        "version": "1.85.0"
+      }
+    }
+  ],
+  "references": [
+    "https://aws.amazon.com/security/security-bulletins/AWS-2025-015/",
+    "https://github.com/aws/aws-toolkit-vscode/security/advisories/GHSA-7g7f-ff96-5gcw"
+  ],
+  "credit": [
+    "AWS Security"
+  ]
+}

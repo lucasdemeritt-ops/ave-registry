@@ -1,0 +1,37 @@
+{
+  "schemaVersion": "0.1",
+  "id": "AVE-2026-0015",
+  "aliases": [
+    "CVE-2026-18252"
+  ],
+  "published": "2026-09-19",
+  "title": "GitLab Duo agent processes configuration from a user-controlled source",
+  "summary": "In affected GitLab Enterprise Edition releases the Duo agent processes configuration from a user-controlled source, allowing an authenticated user with Developer-role permissions to cause arbitrary command execution in a CI environment.",
+  "affected": {
+    "all": [
+      {
+        "harness": {
+          "name": "gitlab-duo",
+          "versions": [
+            ">=18.9 <=19.1.7",
+            ">=19.2 <=19.2.5",
+            ">=19.3 <=19.3.1"
+          ]
+        }
+      }
+    ]
+  },
+  "severity": "high",
+  "impact": [
+    "code-execution"
+  ],
+  "attackVector": "malicious-project-config",
+  "fixedBy": [
+    {
+      "mitigation": "Upgrade GitLab EE past 19.1.7, 19.2.5, or 19.3.1 on the corresponding release line"
+    }
+  ],
+  "references": [
+    "https://cybersecuritynews.com/gitlab-fixes-claude-ai-agent-flaw/"
+  ]
+}

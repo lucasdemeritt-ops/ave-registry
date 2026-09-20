@@ -1,0 +1,61 @@
+{
+  "schemaVersion": "0.1",
+  "id": "AVE-2026-0005",
+  "aliases": [
+    "CVE-2025-68143",
+    "CVE-2025-68144",
+    "CVE-2025-68145"
+  ],
+  "published": "2026-09-19",
+  "title": "mcp-server-git path and argument flaws chain with Filesystem MCP to code execution",
+  "summary": "Three flaws in the reference Git MCP server - a repository path restriction bypass, unrestricted git_init, and argument injection in git_diff - let injected content read or overwrite files the server can reach. Alone the impact is file access. With the Filesystem MCP server also connected, a crafted .git/config yields code execution. The trigger is any content the agent reads.",
+  "affected": {
+    "all": [
+      {
+        "tool": {
+          "source": "pkg:pypi/mcp-server-git",
+          "versions": [
+            "<2025.12.18"
+          ]
+        }
+      },
+      {
+        "tool": {
+          "source": "pkg:npm/@modelcontextprotocol/server-filesystem"
+        }
+      },
+      {
+        "toolset": {
+          "capabilities": {
+            "includesAny": [
+              "ingests-untrusted-content"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "severity": "high",
+  "impact": [
+    "code-execution",
+    "integrity"
+  ],
+  "attackVector": "indirect-prompt-injection",
+  "fixedBy": [
+    {
+      "upgrade": {
+        "component": "tool",
+        "name": "mcp-server-git",
+        "version": "2025.12.18"
+      }
+    }
+  ],
+  "references": [
+    "https://thehackernews.com/2026/01/three-flaws-in-anthropic-mcp-git-server.html",
+    "https://www.theregister.com/2026/01/20/anthropic_prompt_injection_flaws/",
+    "https://vulnerablemcp.info/vuln/cve-2025-68145-anthropic-git-mcp-rce-chain.html"
+  ],
+  "credit": [
+    "Cyata"
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "schemaVersion": "0.1",
+  "id": "AVE-2026-0001",
+  "published": "2026-09-19",
+  "title": "GitHub MCP server leaks private repositories via injected public issue",
+  "summary": "An agent connected to the GitHub MCP server with a token spanning both public and private repositories reads an attacker-authored issue in a public repository. With tool calls not individually confirmed, injected instructions cause it to read private repositories and publish their contents in a public pull request. The researchers state this is not a flaw in the server code; no patch exists. Exposure is determined entirely by token scope and approval policy.",
+  "affected": {
+    "all": [
+      {
+        "tool": {
+          "source": "pkg:github/github/github-mcp-server",
+          "grants": {
+            "repoScope": {
+              "not": "single-repo"
+            }
+          }
+        }
+      },
+      {
+        "harness": {
+          "settings": {
+            "toolApproval": {
+              "in": [
+                "auto",
+                "ask-once"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "model": {
+          "any": true
+        }
+      }
+    ]
+  },
+  "severity": "high",
+  "impact": [
+    "exfiltration"
+  ],
+  "attackVector": "indirect-prompt-injection",
+  "fixedBy": [
+    {
+      "mitigation": "Confirm every tool call rather than remembering approval",
+      "set": {
+        "harness.settings.toolApproval": "always-ask"
+      }
+    },
+    {
+      "mitigation": "Scope the token to a single repository per session"
+    }
+  ],
+  "references": [
+    "https://invariantlabs.ai/blog/mcp-github-vulnerability"
+  ],
+  "credit": [
+    "Invariant Labs"
+  ]
+}

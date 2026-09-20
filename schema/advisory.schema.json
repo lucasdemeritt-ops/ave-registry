@@ -1,0 +1,226 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ave-registry.example/schema/advisory.schema.json",
+  "title": "AVE advisory",
+  "description": "An advisory is a predicate over agent.lock files. A lock is affected when every clause in affected.all holds and no clause in notAffectedIf holds.",
+  "type": "object",
+  "required": ["schemaVersion", "id", "published", "title", "summary", "affected", "severity", "impact", "attackVector", "fixedBy", "references"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "const": "0.1" },
+    "id": { "type": "string", "pattern": "^AVE-[0-9]{4}-[0-9]{4,}$" },
+    "aliases": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Identifiers for the same issue elsewhere: CVE, GHSA, vendor bulletin."
+    },
+    "published": { "type": "string", "format": "date" },
+    "modified": { "type": "string", "format": "date" },
+    "title": { "type": "string", "maxLength": 120 },
+    "summary": { "type": "string", "description": "Conditions and impact. Never working exploit detail." },
+
+    "affected": {
+      "type": "object",
+      "required": ["all"],
+      "additionalProperties": false,
+      "properties": {
+        "all": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/clause" } }
+      }
+    },
+    "notAffectedIf": { "type": "array", "items": { "$ref": "#/$defs/clause" } },
+
+    "severity": { "enum": ["low", "medium", "high"] },
+    "impact": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "enum": ["exfiltration", "code-execution", "integrity", "credential-theft", "persistence", "destruction"] }
+    },
+    "attackVector": {
+      "enum": ["indirect-prompt-injection", "tool-poisoning", "malicious-project-config", "supply-chain", "network", "malicious-server"]
+    },
+
+    "fixedBy": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "required": ["upgrade"],
+            "additionalProperties": false,
+            "properties": {
+              "upgrade": {
+                "type": "object",
+                "required": ["component", "name", "version"],
+                "additionalProperties": false,
+                "properties": {
+                  "component": { "enum": ["harness", "tool"] },
+                  "name": { "type": "string" },
+                  "version": { "type": "string" }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": ["mitigation"],
+            "additionalProperties": false,
+            "properties": {
+              "mitigation": { "type": "string" },
+              "set": { "type": "object", "description": "Lock paths and the values that clear the advisory, e.g. {\"harness.settings.toolApproval\": \"always-ask\"}." }
+            }
+          },
+          {
+            "type": "object",
+            "required": ["remediatedServerSide"],
+            "additionalProperties": false,
+            "properties": {
+              "remediatedServerSide": { "type": "string", "description": "Date the vendor fixed a hosted agent. Operators could not pin or observe the change." },
+              "note": { "type": "string" }
+            }
+          }
+        ]
+      }
+    },
+
+    "detection": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Runtime detection rules for attacks exploiting this configuration, e.g. Agent Threat Rules ids. AVE says you are exposed; these say you are being attacked."
+    },
+    "references": { "type": "array", "minItems": 1, "items": { "type": "string", "format": "uri" } },
+    "credit": { "type": "array", "items": { "type": "string" } }
+  },
+
+  "$defs": {
+    "clause": {
+      "type": "object",
+      "minProperties": 1,
+      "maxProperties": 1,
+      "additionalProperties": false,
+      "properties": {
+        "harness": { "$ref": "#/$defs/harnessClause" },
+        "model":   { "$ref": "#/$defs/modelClause" },
+        "tool":    { "$ref": "#/$defs/toolClause" },
+        "toolset": { "$ref": "#/$defs/toolsetClause" },
+        "runtime": { "$ref": "#/$defs/runtimeClause" },
+        "goal":    { "$ref": "#/$defs/goalClause" },
+        "any":     { "type": "array", "minItems": 2, "items": { "$ref": "#/$defs/clause" } },
+        "not":     { "$ref": "#/$defs/clause" }
+      }
+    },
+
+    "harnessClause": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": false,
+      "properties": {
+        "name": { "$ref": "#/$defs/nameMatch" },
+        "versions": { "$ref": "#/$defs/versionRanges" },
+        "hosted": { "type": "boolean" },
+        "settings": { "type": "object", "additionalProperties": { "$ref": "#/$defs/matcher" } }
+      }
+    },
+
+    "modelClause": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": false,
+      "properties": {
+        "any": { "const": true, "description": "Explicitly model-independent. A legitimate value, not a lazy filing." },
+        "vendor": { "$ref": "#/$defs/nameMatch" },
+        "id": { "$ref": "#/$defs/nameMatch" },
+        "snapshot": { "$ref": "#/$defs/nameMatch" }
+      }
+    },
+
+    "toolClause": {
+      "description": "Holds if at least one tool in the lock satisfies every field.",
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": false,
+      "properties": {
+        "name": { "$ref": "#/$defs/nameMatch" },
+        "source": { "$ref": "#/$defs/nameMatch" },
+        "versions": { "$ref": "#/$defs/versionRanges" },
+        "transport": { "$ref": "#/$defs/matcher" },
+        "pinned": { "type": "boolean" },
+        "capabilities": { "$ref": "#/$defs/setMatch" },
+        "grants": { "type": "object", "additionalProperties": { "$ref": "#/$defs/matcher" } }
+      }
+    },
+
+    "toolsetClause": {
+      "description": "Holds against the union of capabilities across all tools. This is how a combination spread over several tools is expressed.",
+      "type": "object",
+      "required": ["capabilities"],
+      "additionalProperties": false,
+      "properties": {
+        "capabilities": { "$ref": "#/$defs/setMatch" }
+      }
+    },
+
+    "runtimeClause": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": false,
+      "properties": {
+        "sandbox": { "$ref": "#/$defs/matcher" },
+        "networkPolicy": { "$ref": "#/$defs/matcher" },
+        "exposure": { "$ref": "#/$defs/matcher" },
+        "secretsReachable": { "$ref": "#/$defs/matcher" }
+      }
+    },
+
+    "goalClause": {
+      "type": "object",
+      "required": ["properties"],
+      "additionalProperties": false,
+      "properties": {
+        "properties": { "$ref": "#/$defs/setMatch" }
+      }
+    },
+
+    "nameMatch": {
+      "oneOf": [
+        { "type": "string" },
+        { "type": "array", "minItems": 1, "items": { "type": "string" } }
+      ]
+    },
+
+    "versionRanges": {
+      "description": "One or more ranges; a version is affected if it falls in any of them. Each range is space-separated comparators, all of which must hold: '>=0.0.5 <0.1.16'.",
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "pattern": "^((>=|<=|>|<|=)[0-9A-Za-z.\\-+]+)( (>=|<=|>|<|=)[0-9A-Za-z.\\-+]+)*$" }
+    },
+
+    "setMatch": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": false,
+      "properties": {
+        "includesAll": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+        "includesAny": { "type": "array", "minItems": 1, "items": { "type": "string" } }
+      }
+    },
+
+    "matcher": {
+      "oneOf": [
+        { "type": ["string", "number", "boolean"] },
+        {
+          "type": "object",
+          "minProperties": 1,
+          "maxProperties": 1,
+          "additionalProperties": false,
+          "properties": {
+            "in": { "type": "array", "minItems": 1 },
+            "not": { "type": ["string", "number", "boolean"] },
+            "minCount": { "type": "integer", "minimum": 0 },
+            "exists": { "type": "boolean" }
+          }
+        }
+      ]
+    }
+  }
+}

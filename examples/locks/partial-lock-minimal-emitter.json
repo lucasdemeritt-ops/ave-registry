@@ -1,0 +1,17 @@
+{
+  "lockfileVersion": 1,
+  "label": "partial-lock-minimal-emitter",
+  "harness": {
+    "name": "cursor"
+  },
+  "tools": [
+    {
+      "name": "slack",
+      "transport": "mcp-stdio"
+    },
+    {
+      "name": "terminal",
+      "transport": "builtin"
+    }
+  ]
+}

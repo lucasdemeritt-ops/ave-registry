@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ave-registry.example/schema/susceptibility-result.schema.json",
+  "title": "Model susceptibility result",
+  "description": "One record per (model artifact, scaffold, suite). Case-level outcomes live in the transcript log, referenced by digest. See benchmark/SPEC.md.",
+  "type": "object",
+  "required": ["resultVersion", "model", "scaffold", "sampling", "utility", "susceptibility", "ranAt"],
+  "additionalProperties": false,
+  "properties": {
+    "resultVersion": { "const": 1 },
+
+    "model": {
+      "type": "object",
+      "required": ["baseModel", "lineage", "quantization", "weightsDigest", "runner"],
+      "additionalProperties": false,
+      "properties": {
+        "baseModel": { "type": "string", "description": "Family and parameter count, for grouping: 'qwen3-8b'." },
+        "lineage": {
+          "enum": ["base", "instruct-tune", "community-finetune", "abliterated"],
+          "description": "Provenance class. The factor the lineage experiment varies."
+        },
+        "quantization": { "type": "string", "description": "'Q4_K_M', 'Q8_0', 'FP16'." },
+        "weightsDigest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "description": "Of the weights file(s). A tag is not an identity - it can be re-pointed."
+        },
+        "sourceUri": { "type": "string", "description": "Where the artifact came from, e.g. a HuggingFace repo path." },
+        "runner": { "type": "string", "description": "Inference runtime and version: 'ollama 0.6.2', 'llama.cpp b4831'." },
+        "hardware": { "type": "string", "description": "GPU model. Recorded because determinism holds only within a hardware class." }
+      }
+    },
+
+    "scaffold": {
+      "type": "object",
+      "required": ["suite", "scaffoldDigest", "cases"],
+      "additionalProperties": false,
+      "properties": {
+        "suite": { "type": "string", "description": "Suite id and version, e.g. 'canary-v1'." },
+        "scaffoldDigest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "description": "Over system prompt, tool definitions, and suite id together."
+        },
+        "cases": { "type": "integer", "minimum": 1 }
+      }
+    },
+
+    "sampling": {
+      "type": "object",
+      "required": ["temperature"],
+      "additionalProperties": false,
+      "properties": {
+        "temperature": { "type": "number" },
+        "topP": { "type": "number" },
+        "seed": { "type": "integer" },
+        "maxTokens": { "type": "integer" }
+      }
+    },
+
+    "utility": {
+      "type": "object",
+      "description": "The benign control. Without it a model that cannot call tools looks secure.",
+      "required": ["benignPassed", "benignTotal", "rate"],
+      "additionalProperties": false,
+      "properties": {
+        "benignPassed": { "type": "integer", "minimum": 0 },
+        "benignTotal": { "type": "integer", "minimum": 1 },
+        "rate": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+
+    "susceptibility": {
+      "type": "object",
+      "description": "Measured only over cases whose benign control passed.",
+      "required": ["complied", "eligible", "rate"],
+      "additionalProperties": false,
+      "properties": {
+        "complied": { "type": "integer", "minimum": 0 },
+        "eligible": { "type": "integer", "minimum": 0, "description": "Cases whose benign control passed. The denominator of rate." },
+        "rate": { "type": "number", "minimum": 0, "maximum": 1 },
+        "byTechnique": {
+          "type": "object",
+          "description": "Optional breakdown by injection technique id.",
+          "additionalProperties": { "type": "number", "minimum": 0, "maximum": 1 }
+        }
+      }
+    },
+
+    "ranBy": { "type": "string", "description": "Contributor handle. Results are verified by re-running, not by trusting this." },
+    "ranAt": { "type": "string", "format": "date-time" },
+    "transcriptDigest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "description": "Of the local transcript log. Raw transcripts contain working payloads and are not published by default."
+    },
+    "notes": { "type": "string" }
+  }
+}

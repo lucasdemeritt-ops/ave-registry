@@ -1,0 +1,134 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ave-registry.example/schema/agent-lock.schema.json",
+  "title": "agent.lock",
+  "description": "A generated record of exactly what an agent deployment was made of. Pins values, never ranges. Contains no prompt text and no tool output, so it is safe to share.",
+  "type": "object",
+  "required": ["lockfileVersion", "harness", "tools"],
+  "additionalProperties": false,
+  "properties": {
+    "lockfileVersion": { "const": 1 },
+    "generated": { "type": "string", "format": "date-time" },
+    "runId": { "type": "string" },
+    "label": { "type": "string", "description": "Human-readable name for this deployment." },
+
+    "harness": {
+      "type": "object",
+      "required": ["name"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "description": "Registry component name, e.g. 'cursor', 'claude-code', 'gemini-cli'." },
+        "version": { "type": "string" },
+        "source": { "type": "string", "description": "Package URL (purl) where one exists." },
+        "hosted": { "type": "boolean", "description": "True for vendor-hosted agents whose version the operator cannot observe or pin." },
+        "settings": { "$ref": "#/$defs/harnessSettings" }
+      }
+    },
+
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "vendor": { "type": "string" },
+        "id": { "type": "string" },
+        "snapshot": { "type": "string", "description": "Dated snapshot id, never a floating alias." },
+        "weightsDigest": { "type": "string", "description": "sha256 of weights, for self-hosted models." },
+        "params": { "type": "object" }
+      }
+    },
+
+    "goal": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "label": { "type": "string" },
+        "promptSha256": { "type": "string", "description": "Recorded for forensics. Never a matching key; see SCHEMA.md." },
+        "properties": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+
+    "tools": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/tool" }
+    },
+
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "sandbox": { "enum": ["none", "os-sandbox", "container", "vm"] },
+        "networkPolicy": { "enum": ["allow-all", "allowlist", "deny-all"] },
+        "exposure": {
+          "enum": ["local", "private-network", "public"],
+          "description": "Who can reach the agent's own listening interfaces, if it has any."
+        },
+        "secretsReachable": { "type": "array", "items": { "type": "string" }, "description": "Names only, never values." }
+      }
+    },
+
+    "fingerprint": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+  },
+
+  "$defs": {
+    "harnessSettings": {
+      "type": "object",
+      "description": "Normalized, harness-independent vocabulary. An emitter maps the harness's native settings onto these keys. Unknown keys are allowed but no advisory may depend on them.",
+      "properties": {
+        "toolApproval": {
+          "enum": ["always-ask", "ask-once", "auto"],
+          "description": "Whether a human confirms tool calls. 'ask-once' = approval is remembered per tool. 'auto' = no confirmation."
+        },
+        "configWriteApproval": {
+          "enum": ["ask", "auto"],
+          "description": "Whether the agent can modify its own configuration (MCP server list, approval settings) without a human confirming."
+        },
+        "toolDefinitionPinning": {
+          "type": "boolean",
+          "description": "True if a change to an approved tool's definition or description forces re-approval."
+        },
+        "projectConfigTrust": {
+          "enum": ["prompt-before-load", "load-then-prompt", "auto"],
+          "description": "How configuration supplied by an opened project or repository is treated."
+        },
+        "remoteContentRendering": {
+          "type": "boolean",
+          "description": "True if agent output can cause the client to fetch attacker-chosen URLs (e.g. markdown images)."
+        }
+      }
+    },
+
+    "tool": {
+      "type": "object",
+      "required": ["name"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "version": { "type": "string" },
+        "source": { "type": "string", "description": "purl, e.g. 'pkg:npm/mcp-remote'." },
+        "transport": { "enum": ["builtin", "mcp-stdio", "mcp-http", "plugin", "connector"] },
+        "pinned": { "type": "boolean", "description": "True if the tool is pinned to an exact version or content hash." },
+        "integrity": { "type": "string", "description": "Hash of the tool's definitions as approved." },
+        "capabilities": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/capability" }
+        },
+        "grants": {
+          "type": "object",
+          "description": "What this tool was actually allowed to touch. Free-form, but see SCHEMA.md for conventional keys."
+        }
+      }
+    },
+
+    "capability": {
+      "enum": [
+        "ingests-untrusted-content",
+        "reads-private-data",
+        "external-egress",
+        "code-execution",
+        "writes-filesystem",
+        "writes-agent-config"
+      ]
+    }
+  }
+}

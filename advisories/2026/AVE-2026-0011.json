@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "0.1",
+  "id": "AVE-2026-0011",
+  "aliases": [
+    "CVE-2025-54136"
+  ],
+  "published": "2026-09-19",
+  "title": "Cursor before 1.3 trusts an approved MCP entry after its command changes (MCPoison)",
+  "summary": "Cursor before 1.3 bound its approval of a project MCP server to the entry's name rather than its command. An attacker with write access to a shared repository commits a benign entry, waits for approval, then changes the command; it runs silently on every subsequent open.",
+  "affected": {
+    "all": [
+      {
+        "harness": {
+          "name": "cursor",
+          "versions": [
+            "<1.3"
+          ]
+        }
+      }
+    ]
+  },
+  "severity": "high",
+  "impact": [
+    "code-execution",
+    "persistence"
+  ],
+  "attackVector": "malicious-project-config",
+  "fixedBy": [
+    {
+      "upgrade": {
+        "component": "harness",
+        "name": "cursor",
+        "version": "1.3"
+      }
+    }
+  ],
+  "references": [
+    "https://research.checkpoint.com/2025/cursor-vulnerability-mcpoison/"
+  ],
+  "credit": [
+    "Check Point Research"
+  ]
+}

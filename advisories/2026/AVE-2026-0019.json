@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "0.1",
+  "id": "AVE-2026-0019",
+  "published": "2026-09-19",
+  "title": "Salesforce Agentforce leaks CRM data via injected Web-to-Lead submission (ForcedLeak)",
+  "summary": "Instructions placed in a Web-to-Lead form field were later executed when an employee asked Agentforce about the lead, causing CRM data to be sent to an attacker through a request to a domain that remained on the content security allowlist after its registration had lapsed. Salesforce began enforcing Trusted URLs for agent output on 8 September 2025.",
+  "affected": {
+    "all": [
+      {
+        "harness": {
+          "name": "agentforce",
+          "hosted": true,
+          "settings": {
+            "remoteContentRendering": true
+          }
+        }
+      },
+      {
+        "toolset": {
+          "capabilities": {
+            "includesAny": [
+              "ingests-untrusted-content"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "severity": "high",
+  "impact": [
+    "exfiltration"
+  ],
+  "attackVector": "indirect-prompt-injection",
+  "fixedBy": [
+    {
+      "remediatedServerSide": "2025-09-08",
+      "note": "Trusted URLs enforcement for Agentforce and Einstein AI"
+    },
+    {
+      "mitigation": "Audit the Trusted URLs allowlist for lapsed or unowned domains"
+    }
+  ],
+  "references": [
+    "https://noma.security/blog/forcedleak-agent-risks-exposed-in-salesforce-agentforce/"
+  ],
+  "credit": [
+    "Noma Security"
+  ]
+}

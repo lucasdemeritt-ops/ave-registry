@@ -1,0 +1,66 @@
+{
+  "schemaVersion": "0.1",
+  "id": "AVE-2026-0003",
+  "published": "2026-09-19",
+  "title": "Unpinned MCP server can redefine its tools after approval to hijack a trusted server",
+  "summary": "An MCP server that is not pinned to a version or content hash is approved with benign tool descriptions, then later serves changed descriptions that instruct the agent how to use a different, trusted server. Where the client does not force re-approval on a definition change, the agent can be steered into sending private data out through the trusted server's own tools. Demonstrated against a WhatsApp MCP server, exfiltrating full chat history.",
+  "affected": {
+    "all": [
+      {
+        "tool": {
+          "pinned": false,
+          "transport": {
+            "in": [
+              "mcp-stdio",
+              "mcp-http"
+            ]
+          }
+        }
+      },
+      {
+        "harness": {
+          "settings": {
+            "toolDefinitionPinning": false
+          }
+        }
+      },
+      {
+        "toolset": {
+          "capabilities": {
+            "includesAll": [
+              "reads-private-data",
+              "external-egress"
+            ]
+          }
+        }
+      },
+      {
+        "model": {
+          "any": true
+        }
+      }
+    ]
+  },
+  "severity": "high",
+  "impact": [
+    "exfiltration"
+  ],
+  "attackVector": "tool-poisoning",
+  "fixedBy": [
+    {
+      "mitigation": "Pin every MCP server to an exact version or content hash"
+    },
+    {
+      "mitigation": "Use a client that re-prompts when an approved tool's definition changes",
+      "set": {
+        "harness.settings.toolDefinitionPinning": true
+      }
+    }
+  ],
+  "references": [
+    "https://invariantlabs.ai/blog/whatsapp-mcp-exploited"
+  ],
+  "credit": [
+    "Invariant Labs"
+  ]
+}

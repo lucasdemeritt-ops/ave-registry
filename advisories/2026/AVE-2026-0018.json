@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "0.1",
+  "id": "AVE-2026-0018",
+  "aliases": [
+    "CVE-2025-32711"
+  ],
+  "published": "2026-09-19",
+  "title": "Microsoft 365 Copilot leaks in-scope data via an unopened external email (EchoLeak)",
+  "summary": "An external email containing hidden instructions, merely present in the mailbox, was retrieved into Copilot's context during an unrelated question and caused in-scope organisational data to be sent to an attacker. No user interaction was needed. Microsoft fixed the service in June 2025; operators could not observe or pin the change.",
+  "affected": {
+    "all": [
+      {
+        "harness": {
+          "name": "m365-copilot",
+          "hosted": true
+        }
+      },
+      {
+        "toolset": {
+          "capabilities": {
+            "includesAny": [
+              "ingests-untrusted-content"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "severity": "high",
+  "impact": [
+    "exfiltration"
+  ],
+  "attackVector": "indirect-prompt-injection",
+  "fixedBy": [
+    {
+      "remediatedServerSide": "2025-06",
+      "note": "June 2025 security update; no customer action required"
+    },
+    {
+      "mitigation": "Apply DLP labels that exclude external email from Copilot processing"
+    }
+  ],
+  "references": [
+    "https://thehackernews.com/2025/06/zero-click-ai-vulnerability-exposes.html",
+    "https://socprime.com/blog/cve-2025-32711-zero-click-ai-vulnerability/"
+  ],
+  "credit": [
+    "Aim Labs"
+  ]
+}

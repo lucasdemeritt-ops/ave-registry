@@ -1,0 +1,46 @@
+{
+  "schemaVersion": "0.1",
+  "id": "AVE-2026-0010",
+  "published": "2026-09-19",
+  "title": "Gemini CLI before 0.1.14 runs injected commands past its allowlist",
+  "summary": "Gemini CLI before 0.1.14 matched shell commands against the user's allowlist inadequately, so a command approved once could carry an appended payload, hidden from the display by whitespace. Instructions planted in a repository's context files trigger it when the tool is run against untrusted code. Running inside one of the tool's sandbox modes contains the impact.",
+  "affected": {
+    "all": [
+      {
+        "harness": {
+          "name": "gemini-cli",
+          "versions": [
+            "<0.1.14"
+          ]
+        }
+      }
+    ]
+  },
+  "severity": "high",
+  "impact": [
+    "code-execution",
+    "credential-theft"
+  ],
+  "attackVector": "indirect-prompt-injection",
+  "fixedBy": [
+    {
+      "upgrade": {
+        "component": "harness",
+        "name": "gemini-cli",
+        "version": "0.1.14"
+      }
+    },
+    {
+      "mitigation": "Run in a sandbox mode (container or OS sandbox)",
+      "set": {
+        "runtime.sandbox": "container"
+      }
+    }
+  ],
+  "references": [
+    "https://tracebit.com/blog/code-exec-deception-gemini-ai-cli-hijack"
+  ],
+  "credit": [
+    "Tracebit"
+  ]
+}

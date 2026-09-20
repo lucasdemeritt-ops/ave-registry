@@ -1,0 +1,56 @@
+{
+  "lockfileVersion": 1,
+  "label": "ci-coding-agent-patched",
+  "generated": "2026-09-19T20:00:00Z",
+  "harness": {
+    "name": "claude-code",
+    "version": "2.1.4",
+    "settings": {
+      "toolApproval": "auto",
+      "configWriteApproval": "ask",
+      "toolDefinitionPinning": true,
+      "projectConfigTrust": "prompt-before-load"
+    }
+  },
+  "model": {
+    "vendor": "anthropic",
+    "id": "claude-opus-5",
+    "snapshot": "claude-opus-5-20260714"
+  },
+  "tools": [
+    {
+      "name": "git",
+      "source": "pkg:pypi/mcp-server-git",
+      "version": "2025.12.18",
+      "transport": "mcp-stdio",
+      "pinned": true,
+      "capabilities": [
+        "ingests-untrusted-content",
+        "writes-filesystem"
+      ]
+    },
+    {
+      "name": "filesystem",
+      "source": "pkg:npm/@modelcontextprotocol/server-filesystem",
+      "version": "2025.8.21",
+      "transport": "mcp-stdio",
+      "pinned": true,
+      "capabilities": [
+        "writes-filesystem"
+      ],
+      "grants": {
+        "read": [
+          "/workspace"
+        ],
+        "write": [
+          "/workspace"
+        ]
+      }
+    }
+  ],
+  "runtime": {
+    "sandbox": "container",
+    "networkPolicy": "allowlist",
+    "secretsReachable": []
+  }
+}

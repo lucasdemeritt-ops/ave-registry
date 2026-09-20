@@ -1,0 +1,49 @@
+{
+  "lockfileVersion": 1,
+  "label": "hardened-support-agent",
+  "generated": "2026-09-19T20:00:00Z",
+  "harness": {
+    "name": "langgraph",
+    "version": "0.4.14",
+    "settings": {
+      "toolApproval": "always-ask",
+      "configWriteApproval": "ask",
+      "toolDefinitionPinning": true,
+      "remoteContentRendering": false
+    }
+  },
+  "model": {
+    "vendor": "anthropic",
+    "id": "claude-opus-5",
+    "snapshot": "claude-opus-5-20260714"
+  },
+  "tools": [
+    {
+      "name": "ticket-reader",
+      "version": "2.1.0",
+      "transport": "mcp-http",
+      "pinned": true,
+      "capabilities": [
+        "ingests-untrusted-content",
+        "reads-private-data"
+      ],
+      "grants": {
+        "readOnly": true
+      }
+    },
+    {
+      "name": "kb-search",
+      "version": "1.8.3",
+      "transport": "builtin",
+      "capabilities": []
+    }
+  ],
+  "runtime": {
+    "sandbox": "container",
+    "networkPolicy": "allowlist",
+    "exposure": "private-network",
+    "secretsReachable": [
+      "ZENDESK_TOKEN"
+    ]
+  }
+}
