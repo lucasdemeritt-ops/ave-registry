@@ -1,6 +1,7 @@
 # Model susceptibility benchmark — spec
 
-**Status: specification only. Nothing here has been run. No results exist yet.**
+**Status: first experiment run 2026-09-19. Quantization produced no monotonic effect,
+and the suite proved under-powered — see [RESULTS.md](RESULTS.md).**
 
 ## Why this exists
 

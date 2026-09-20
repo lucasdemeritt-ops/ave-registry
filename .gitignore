@@ -1,5 +1,9 @@
 __pycache__/
 *.pyc
+
+# Raw transcripts contain the injection payloads in full. Results reference them
+# by digest instead; see benchmark/SPEC.md, "Dual-use".
+benchmark/transcripts/
 .venv/
 venv/
 .DS_Store

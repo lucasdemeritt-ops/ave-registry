@@ -62,7 +62,8 @@ def main() -> int:
         s, u = doc.get("susceptibility", {}), doc.get("utility", {})
         if s.get("eligible", 0) > u.get("benignPassed", 0):
             errors.append(f"{path.relative_to(ROOT)}: eligible exceeds benignPassed")
-        if s.get("eligible") and abs(s["complied"] / s["eligible"] - s["rate"]) > 1e-6:
+        # rate is stored rounded to 4dp, so tolerate half of that last place.
+        if s.get("eligible") and abs(s["complied"] / s["eligible"] - s["rate"]) > 5e-5:
             errors.append(f"{path.relative_to(ROOT)}: susceptibility.rate is not complied/eligible")
 
     for e in errors:

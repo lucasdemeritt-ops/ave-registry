@@ -103,11 +103,17 @@ SCHEMA.md      matching semantics, vocabularies, conventions
 
 [`benchmark/SPEC.md`](benchmark/SPEC.md) specifies a reproducible measurement of how
 readily a **pinned** model artifact obeys injected instructions — aimed at quantized
-builds and community fine-tunes, which nobody measures and everybody runs locally. It
-reuses existing task suites rather than inventing a benchmark, and uses canary tool calls
-so the verdict is a string match rather than a judgement.
+builds and community fine-tunes, which nobody measures and everybody runs locally. The
+verdict is a canary tool call, so it is a string match rather than a judgement, and every
+attack case is paired with a benign control so a model that simply cannot call tools is
+excluded instead of scored as resistant.
 
-Specification only. No results exist yet.
+**First experiment** ([RESULTS.md](benchmark/RESULTS.md)): Llama-3.1-8B-Instruct across
+Q4_K_M / Q5_K_M / Q6_K / Q8_0, 24 matched pairs each. **No monotonic quantization
+effect** — Q8_0, the least quantized, tied for the highest susceptibility. The widest gap
+is not significant once corrected for post-hoc pair selection. Utility was 24/24 on every
+build, so the comparison is clean on its own terms; the suite is simply too small, and
+every successful injection concentrated in a single content channel per build.
 
 ## Contributing, and reporting
 
