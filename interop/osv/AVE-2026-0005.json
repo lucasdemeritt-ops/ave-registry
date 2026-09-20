@@ -1,0 +1,72 @@
+{
+  "schema_version": "1.6.0",
+  "id": "x_AVE-2026-0005",
+  "published": "2026-09-19T00:00:00Z",
+  "modified": "2026-09-19T00:00:00Z",
+  "summary": "mcp-server-git path and argument flaws chain with Filesystem MCP to code execution",
+  "details": "Three flaws in the reference Git MCP server - a repository path restriction bypass, unrestricted git_init, and argument injection in git_diff - let injected content read or overwrite files the server can reach. Alone the impact is file access. With the Filesystem MCP server also connected, a crafted .git/config yields code execution. The trigger is any content the agent reads.",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "mcp-server-git"
+      },
+      "ranges": [
+        {
+          "type": "ECOSYSTEM",
+          "events": [
+            {
+              "introduced": "0"
+            },
+            {
+              "fixed": "2025.12.18"
+            }
+          ]
+        }
+      ],
+      "database_specific": {
+        "ave_conditions_not_expressible_in_osv": [
+          {
+            "tool": {
+              "source": "pkg:npm/@modelcontextprotocol/server-filesystem"
+            }
+          },
+          {
+            "toolset": {
+              "capabilities": {
+                "includesAny": [
+                  "ingests-untrusted-content"
+                ]
+              }
+            }
+          }
+        ],
+        "warning": "OSV matchers ignore this field; this record over-matches without it."
+      }
+    }
+  ],
+  "references": [
+    {
+      "type": "ARTICLE",
+      "url": "https://thehackernews.com/2026/01/three-flaws-in-anthropic-mcp-git-server.html"
+    },
+    {
+      "type": "ARTICLE",
+      "url": "https://www.theregister.com/2026/01/20/anthropic_prompt_injection_flaws/"
+    },
+    {
+      "type": "ARTICLE",
+      "url": "https://vulnerablemcp.info/vuln/cve-2025-68145-anthropic-git-mcp-rce-chain.html"
+    }
+  ],
+  "aliases": [
+    "CVE-2025-68143",
+    "CVE-2025-68144",
+    "CVE-2025-68145"
+  ],
+  "credits": [
+    {
+      "name": "Cyata"
+    }
+  ]
+}

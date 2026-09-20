@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.6.0",
+  "id": "x_AVE-2026-0007",
+  "published": "2026-09-19T00:00:00Z",
+  "modified": "2026-09-19T00:00:00Z",
+  "summary": "Semantic Kernel (Python) In-Memory Vector Store filter evaluates injected code",
+  "details": "Semantic Kernel for Python before 1.39.4 evaluates vector-store filter expressions with eval() behind a bypassable blocklist. An agent using the In-Memory Vector Store through the search plugin, and reachable by prompt injection, can be driven to execute code on the host. Deployments that do not use the In-Memory Vector Store are not affected.",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "PyPI",
+        "name": "semantic-kernel"
+      },
+      "ranges": [
+        {
+          "type": "ECOSYSTEM",
+          "events": [
+            {
+              "introduced": "0"
+            },
+            {
+              "fixed": "1.39.4"
+            }
+          ]
+        }
+      ],
+      "database_specific": {
+        "ave_conditions_not_expressible_in_osv": [
+          {
+            "tool": {
+              "name": "in-memory-vector-store"
+            }
+          }
+        ],
+        "warning": "OSV matchers ignore this field; this record over-matches without it."
+      }
+    }
+  ],
+  "references": [
+    {
+      "type": "ARTICLE",
+      "url": "https://www.microsoft.com/en-us/security/blog/2026/05/07/prompts-become-shells-rce-vulnerabilities-ai-agent-frameworks/"
+    }
+  ],
+  "aliases": [
+    "CVE-2026-26030"
+  ],
+  "credits": [
+    {
+      "name": "Microsoft Security"
+    }
+  ]
+}

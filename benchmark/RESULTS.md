@@ -96,6 +96,13 @@ everywhere, while plain natural-language instructions succeeded.
   quantization, it would have silently corrupted the comparison. The text protocol removes
   the parser as a variable but is one step less faithful to a production harness. Worth
   reporting upstream.
+- **Every injection is appended at the end of the content.** Position was never varied and
+  is confounded with everything. Identified after the run; see
+  [SUITE-DESIGN.md](SUITE-DESIGN.md).
+- **Attacker goal is mixed and unlabelled.** Some techniques ask the model to send
+  *instead* to the attacker, others to send *also*. Those are different asks and the rates
+  above pool them.
+- **One sample per cell.** Each channel × technique result rests on a single piece of text.
 - **No FP16 arm**, so the genuinely unquantized baseline is untested.
 - **Synthetic cases** written by the same person running the experiment.
 

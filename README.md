@@ -93,10 +93,13 @@ There is no lockfile emitter yet. Until there is, locks are written by hand agai
 schema/        JSON Schema for agent.lock, advisories, and benchmark results
 advisories/    the registry, one file per AVE id
 examples/      sample lockfiles: vulnerable, hardened, patched, hosted, under-specified
-tools/         audit.py (matcher), validate.py (schema + registry rules)
+tools/         audit.py (matcher), validate.py (schema + rules), osv_export.py (OSV bridge)
 tests/         the expected-match matrix; doubles as the specificity test
-benchmark/     model susceptibility track — SPEC.md only, nothing run yet
-SCHEMA.md      matching semantics, vocabularies, conventions
+benchmark/     model susceptibility track: spec, suite design, harness, first results
+interop/osv/   every advisory OSV can express, as valid OSV records
+SCHEMA.md         matching semantics, vocabularies, conventions
+ROADMAP.md        where this is, where it's going, what finished looks like
+ALTERNATIVES.md   the cheaper answers, how they were tested, what would make us switch
 ```
 
 ## Second track: model susceptibility

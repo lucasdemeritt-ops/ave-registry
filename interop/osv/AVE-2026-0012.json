@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.6.0",
+  "id": "x_AVE-2026-0012",
+  "published": "2026-09-19T00:00:00Z",
+  "modified": "2026-09-19T00:00:00Z",
+  "summary": "Claude Code before 1.0.111 runs hooks from an untrusted project on startup",
+  "details": "Claude Code before 1.0.111 executed hook commands defined in a project's settings file when started in that directory. Opening an attacker-supplied repository was sufficient for command execution.",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "npm",
+        "name": "@anthropic-ai/claude-code"
+      },
+      "ranges": [
+        {
+          "type": "ECOSYSTEM",
+          "events": [
+            {
+              "introduced": "0"
+            },
+            {
+              "fixed": "1.0.111"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "ARTICLE",
+      "url": "https://research.checkpoint.com/2026/rce-and-api-token-exfiltration-through-claude-code-project-files-cve-2025-59536/"
+    }
+  ],
+  "aliases": [
+    "CVE-2025-59536"
+  ],
+  "credits": [
+    {
+      "name": "Check Point Research"
+    }
+  ]
+}

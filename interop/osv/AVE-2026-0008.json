@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.6.0",
+  "id": "x_AVE-2026-0008",
+  "published": "2026-09-19T00:00:00Z",
+  "modified": "2026-09-19T00:00:00Z",
+  "summary": "Semantic Kernel (.NET) SessionsPythonPlugin exposes unvalidated file write to the model",
+  "details": "Semantic Kernel for .NET before 1.71.0 exposes DownloadFileAsync to the model as a callable function with no path validation. An agent configured with SessionsPythonPlugin can be driven by prompt input to write files outside the sandbox onto the host, reaching persistence and host compromise. Deployments without the plugin are not affected.",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "NuGet",
+        "name": "Microsoft.SemanticKernel"
+      },
+      "ranges": [
+        {
+          "type": "ECOSYSTEM",
+          "events": [
+            {
+              "introduced": "0"
+            },
+            {
+              "fixed": "1.71.0"
+            }
+          ]
+        }
+      ],
+      "database_specific": {
+        "ave_conditions_not_expressible_in_osv": [
+          {
+            "tool": {
+              "name": "SessionsPythonPlugin"
+            }
+          }
+        ],
+        "warning": "OSV matchers ignore this field; this record over-matches without it."
+      }
+    }
+  ],
+  "references": [
+    {
+      "type": "ARTICLE",
+      "url": "https://www.microsoft.com/en-us/security/blog/2026/05/07/prompts-become-shells-rce-vulnerabilities-ai-agent-frameworks/"
+    }
+  ],
+  "aliases": [
+    "CVE-2026-25592"
+  ],
+  "credits": [
+    {
+      "name": "Microsoft Security"
+    }
+  ]
+}

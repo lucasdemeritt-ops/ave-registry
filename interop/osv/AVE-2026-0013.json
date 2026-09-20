@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.6.0",
+  "id": "x_AVE-2026-0013",
+  "published": "2026-09-19T00:00:00Z",
+  "modified": "2026-09-19T00:00:00Z",
+  "summary": "Claude Code before 2.0.65 sends API requests to a project-supplied base URL before trust prompt",
+  "details": "Claude Code before 2.0.65 honoured an API base URL set in a project's settings file and issued requests before showing the trust prompt. Opening an attacker-supplied repository could disclose the user's API key to an attacker-controlled endpoint.",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "npm",
+        "name": "@anthropic-ai/claude-code"
+      },
+      "ranges": [
+        {
+          "type": "ECOSYSTEM",
+          "events": [
+            {
+              "introduced": "0"
+            },
+            {
+              "fixed": "2.0.65"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "ARTICLE",
+      "url": "https://research.checkpoint.com/2026/rce-and-api-token-exfiltration-through-claude-code-project-files-cve-2025-59536/"
+    }
+  ],
+  "aliases": [
+    "CVE-2026-21852"
+  ],
+  "credits": [
+    {
+      "name": "Check Point Research"
+    }
+  ]
+}

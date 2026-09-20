@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.6.0",
+  "id": "x_AVE-2026-0014",
+  "published": "2026-09-19T00:00:00Z",
+  "modified": "2026-09-19T00:00:00Z",
+  "summary": "mcp-remote 0.0.5 to 0.1.15 executes commands supplied by a malicious MCP server",
+  "details": "mcp-remote passes a server-supplied authorization endpoint to the operating system's URL opener. A malicious or intercepted MCP server can supply a value that executes commands on the client, with full parameter control on Windows. Connecting only to trusted servers over HTTPS limits exposure.",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "npm",
+        "name": "mcp-remote"
+      },
+      "ranges": [
+        {
+          "type": "ECOSYSTEM",
+          "events": [
+            {
+              "introduced": "0.0.5"
+            },
+            {
+              "fixed": "0.1.16"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "references": [
+    {
+      "type": "ARTICLE",
+      "url": "https://jfrog.com/blog/2025-6514-critical-mcp-remote-rce-vulnerability/"
+    }
+  ],
+  "aliases": [
+    "CVE-2025-6514"
+  ],
+  "credits": [
+    {
+      "name": "JFrog Security Research"
+    }
+  ]
+}

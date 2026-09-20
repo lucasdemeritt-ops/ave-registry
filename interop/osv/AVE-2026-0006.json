@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.6.0",
+  "id": "x_AVE-2026-0006",
+  "published": "2026-09-19T00:00:00Z",
+  "modified": "2026-09-19T00:00:00Z",
+  "summary": "GitHub Copilot agent mode can enable its own auto-approval by editing workspace settings",
+  "details": "In agent mode, Copilot could write to the workspace settings file without confirmation. Injected content instructs it to enable automatic tool approval, after which terminal commands run unconfirmed. The root condition is an agent able to modify its own approval configuration. Fixed in the August 2025 update; the sources reviewed do not give an exact fixed version, so this record matches on the setting rather than a version range.",
+  "affected": [
+    {
+      "package": {
+        "ecosystem": "VSCode",
+        "name": "GitHub.copilot-chat"
+      },
+      "ranges": [
+        {
+          "type": "ECOSYSTEM",
+          "events": [
+            {
+              "introduced": "0"
+            }
+          ]
+        }
+      ],
+      "database_specific": {
+        "ave_conditions_not_expressible_in_osv": [
+          {
+            "harness": {
+              "settings": {
+                "configWriteApproval": "auto"
+              }
+            }
+          }
+        ],
+        "warning": "OSV matchers ignore this field; this record over-matches without it."
+      }
+    }
+  ],
+  "references": [
+    {
+      "type": "ARTICLE",
+      "url": "https://embracethered.com/blog/posts/2025/github-copilot-remote-code-execution-via-prompt-injection/"
+    }
+  ],
+  "aliases": [
+    "CVE-2025-53773"
+  ],
+  "credits": [
+    {
+      "name": "Johann Rehberger"
+    }
+  ]
+}

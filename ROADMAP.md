@@ -67,6 +67,25 @@ configuration that *should* be compromised and one that *shouldn't*, and confirm
 separates them. An instrument that can't catch a config built to be caught isn't
 measuring.
 
+[benchmark/SUITE-DESIGN.md](benchmark/SUITE-DESIGN.md) lists every dimension the suite
+could vary, which ones it actually does, and the ~25 planned channels — each tied to a
+real exploit in the registry where one exists. It also discloses three flaws in the
+current suite that the first experiment's numbers inherit.
+
+## In parallel: the OSV bridge
+
+The main alternative to this project is "don't build a registry, extend OSV." Rather than
+argue it, `tools/osv_export.py` translates every advisory into OSV and measures what
+survives. Today: **6 of 20 lossless, 6 lossy, 8 unrepresentable.** OSV carries under a
+third of the evidence intact, and for the lossy third the conditions it drops are the
+whole point.
+
+The bridge stays wired in regardless, because it pays either way: the lossless records are
+usable by existing OSV scanners now, and if the premise ever fails, the exporter is the
+migration path. The class shares are a standing check on whether this registry is earning
+its existence. [ALTERNATIVES.md](ALTERNATIVES.md) has the method, the limits, and the
+evidence that would make the project switch.
+
 ## Next
 
 **Make a run reproducible by someone else.** Today it needs llama.cpp installed by hand, a
@@ -124,9 +143,12 @@ move and the one most likely to destroy the tool's value. If the review bar is e
 relaxed to grow the corpus, the project starts failing while its numbers improve.
 
 **Being wrong about the premise.** If real findings keep collapsing to "this package at
-this version is broken," the right conclusion is that OSV should gain a few fields, and
-that's a smaller and more likely-to-succeed contribution than a new registry. Phase 0 says
-otherwise, but on 21 findings written by one person.
+this version is broken," the right conclusion is that OSV should carry them, and that's a
+smaller and more likely-to-succeed contribution than a new registry. This is measured, not
+assumed: the OSV translation currently carries 6 of 20 records intact. If that share
+becomes the clear majority as the corpus grows, the project should switch, and
+[ALTERNATIVES.md](ALTERNATIVES.md) commits to that in advance. Today's evidence is 20
+records written by one person — enough to proceed, not enough to be sure.
 
 ## Where the idea came from
 
