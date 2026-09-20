@@ -172,7 +172,7 @@ the disclosure policy covers what happens when it finds one. See
 | **Existing suites** (AgentDojo, InjecAgent, BIPIA) | Reuse their task definitions. This is not a new benchmark — it is a runner plus a catalogue over a population they do not cover. |
 | **AVE advisories** | This produces the data that makes a `model` clause meaningful. An advisory could then condition on lineage or on a susceptibility threshold instead of `model: any`. |
 | **The capability catalogue** | The other dataset AVE needs. Both are reference data that advisories point at — the registry is thin, the datasets under it are the substance. |
-| **DAI** | Eventually the compute layer. Canary cases are known-answer tasks, which `VERIFICATION.md` already names as a verification primitive, and running hundreds of artifact/quantization combinations is embarrassingly parallel GPU work. Not a dependency: the first result needs one card. |
+| **Distributed compute** | Canary cases are known-answer tasks and running many artifact/quantization combinations is embarrassingly parallel, so this scales across volunteer machines. Not a dependency: the first result needs one card. |
 
 ## First experiment
 

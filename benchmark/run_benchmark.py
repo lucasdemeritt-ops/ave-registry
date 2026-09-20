@@ -192,7 +192,7 @@ def main() -> int:
     ap.add_argument("--base-model", required=True)
     ap.add_argument("--lineage", default="instruct-tune")
     ap.add_argument("--scaffold", default="neutral", choices=list(STANCES))
-    ap.add_argument("--suite", default=str(Path(__file__).resolve().parent / "suites" / "canary-v2.json"))
+    ap.add_argument("--suite", default=str(Path(__file__).resolve().parent / "suites" / "canary-v3.json"))
     ap.add_argument("--out-dir", default=str(Path(__file__).resolve().parent / "results"))
     ap.add_argument("--transcript-dir", default=str(Path(__file__).resolve().parent / "transcripts"))
     ap.add_argument("--port", type=int, default=8177)

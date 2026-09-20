@@ -57,15 +57,20 @@ text.
 
 ## Now
 
-**Calibrate the measurement.** Every cell in the current suite is one channel × one
-technique × one sample, so each result rests on a single sentence. The fix is authoring,
-not engineering: several worded variants per channel so a score averages over phrasing,
-and roughly five times more channels so a result can be said to generalize.
+**The measurement is calibrated for redirect attacks (done).** `canary-v2` grew the suite
+to 20 channels with the benign control and the positive/negative scaffold controls. Run 2
+([benchmark/RESULTS-v2.md](benchmark/RESULTS-v2.md)) validated it for redirect ("instead")
+injections — the controls order 92% / 81% / 34% with a 58-point spread — and showed the
+add-a-recipient ("also") half does not calibrate. `canary-v3` is that validated instrument
+with "also" removed, and is now the default suite. First trustworthy figure:
+Llama-3.1-8B-Instruct Q8_0 follows a redirect injection 81% of the time, cut to 34% by a
+"treat tool content as untrusted" system prompt.
 
-Then the part that actually decides whether any of it means anything — build a
-configuration that *should* be compromised and one that *shouldn't*, and confirm the suite
-separates them. An instrument that can't catch a config built to be caught isn't
-measuring.
+**Next on the benchmark:** run `canary-v3` across the four quantizations and then across
+lineages (official vs community fine-tune vs abliterated), which is the comparison that was
+the point. Replace the author-set pass thresholds in `analyze.py` with ones grounded in the
+control runs. Then widen the remaining suite dimensions in
+[benchmark/SUITE-DESIGN.md](benchmark/SUITE-DESIGN.md).
 
 [benchmark/SUITE-DESIGN.md](benchmark/SUITE-DESIGN.md) lists every dimension the suite
 could vary, which ones it actually does, and the ~25 planned channels — each tied to a
