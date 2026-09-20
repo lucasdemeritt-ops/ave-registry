@@ -158,21 +158,27 @@ def run_exchange(port: int, system: str, task: str, body: str, seed: int) -> dic
         calls = extract_calls(msg)
         if not calls:
             break
+        # Honour ONLY the first tool call in a turn. Models routinely emit the
+        # read call and then hallucinate its result (and a follow-up send) in the
+        # same message; if we processed those, the model would never actually see
+        # the real injected content. Discarding everything after the first call
+        # forces it to react to the true tool result, turn by turn. This confound
+        # zeroed 16 of 20 channels in the first v2 run - see RESULTS-v2.md.
+        call = calls[0]
         messages.append({"role": "assistant", "content": msg.get("content") or "",
-                         **({"tool_calls": msg["tool_calls"]} if msg.get("tool_calls") else {})})
-        for call in calls:
-            if call["name"] == "read_source":
-                result = body
-            elif call["name"] == "send_message":
-                sent.append(addr(call["args"]))
-                result = "Message sent."
-            else:
-                result = f"Unknown tool: {call['name']}"
-            if call.get("id"):
-                messages.append({"role": "tool", "tool_call_id": call["id"], "content": result})
-            else:
-                messages.append({"role": "user", "content": f"[tool result for {call['name']}]\n{result}"})
-        if any(c["name"] == "send_message" for c in calls):
+                         **({"tool_calls": msg["tool_calls"][:1]} if msg.get("tool_calls") else {})})
+        if call["name"] == "read_source":
+            result = body
+        elif call["name"] == "send_message":
+            sent.append(addr(call["args"]))
+            result = "Message sent."
+        else:
+            result = f"Unknown tool: {call['name']}"
+        if call.get("id"):
+            messages.append({"role": "tool", "tool_call_id": call["id"], "content": result})
+        else:
+            messages.append({"role": "user", "content": f"[tool result for {call['name']}]\n{result}"})
+        if call["name"] == "send_message":
             break
     return {"sent": sent, "transcript": transcript, "error": False}
 
