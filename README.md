@@ -115,6 +115,17 @@ is not significant once corrected for post-hoc pair selection. Utility was 24/24
 build, so the comparison is clean on its own terms; the suite is simply too small, and
 every successful injection concentrated in a single content channel per build.
 
+## What happens next
+
+[ROADMAP.md](ROADMAP.md) is a list of **conditions, not dates**. The blocker is that the
+benchmark instrument is not yet calibrated: every cell in `canary-v1` is a single sample,
+so a headline rate can move 20 points on one piece of text. Stage 1 fixes that by writing
+more cases and adding positive and negative controls. Until a deliberately susceptible
+config scores high and a hardened one scores near zero, no susceptibility number from this
+project should be cited — including internally.
+
+Compute is not the constraint. The first experiment used about five minutes of GPU time.
+
 ## Contributing, and reporting
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the review bar — in one line, *an advisory
